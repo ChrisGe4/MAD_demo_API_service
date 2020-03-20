@@ -4,6 +4,7 @@
   * Cloud Build setup
   * Helm Chart
   * Rest API    
+  
 **In progress**
   * gRPC
     
