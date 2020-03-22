@@ -1,22 +1,32 @@
 package main
 
 import (
-	"context"
+	"flag"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 
 	"github.com/chrisge4/MAD_demo_API_service/pkg/config"
 	"github.com/chrisge4/MAD_demo_API_service/pkg/http/rest"
-	storage "github.com/chrisge4/MAD_demo_API_service/pkg/storage/nosql"
+	pb "github.com/chrisge4/MAD_demo_API_service/pkg/rpc/proto"
 )
 
 func main() {
-	ctx := context.Background()
-	db, err := storage.NewGcs(ctx, "", "gcore")
-	fatal(err)
-	cfg := config.New(db)
+
+	addr := flag.String("addr", "localhost:8082", "address of grpc server")
+	flag.Parse()
+	//ctx := context.Background()
+	//db, err := storage.NewGcs(ctx, "", "gcore")
+	//fatal(err)
+	conn, err := grpc.Dial(*addr, grpc.WithInsecure())
+	defer conn.Close()
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	client := pb.NewTodoClient(conn)
+	cfg := config.New(client)
 	cfg.SetDebug(true)
 	s := gin.Default()
 	s.GET("/", func(c *gin.Context) {

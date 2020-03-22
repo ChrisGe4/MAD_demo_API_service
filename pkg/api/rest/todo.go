@@ -2,33 +2,51 @@ package api
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/chrisge4/MAD_demo_API_service/pkg/config"
+	pb "github.com/chrisge4/MAD_demo_API_service/pkg/rpc/proto"
 )
 
 func GetTodoFn(cfg *config.ServerConfig) func(*gin.Context) {
 	return func(c *gin.Context) {
-
-		ctx := context.Background()
-
-		id := c.Param("id")
-		rc, err := cfg.Db().Get(ctx, id)
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		name := c.Param("category")
+		//rc, err := cfg.Db().Get(ctx, id)
+		//if err != nil {
+		//	c.AbortWithError(http.StatusNotFound, err)
+		//	return
+		//}
+		//defer rc.Close()
+		category := &pb.Category{
+			Name: name,
+		}
+		stream, err := cfg.RpcClient().ListTodos(ctx, category)
 		if err != nil {
-			c.AbortWithError(http.StatusNotFound, err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		defer rc.Close()
+		var result []*pb.TodoItem
+		for {
 
-		data, err := ioutil.ReadAll(rc)
-		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, err)
-			return
+			t, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("%v.ListTodos(%v) = _, %v", cfg.RpcClient(), category, err)
+			}
+			result = append(result, t)
 		}
-		c.Writer.Write(data)
+
+		c.JSON(http.StatusOK, result)
 
 	}
+
 }

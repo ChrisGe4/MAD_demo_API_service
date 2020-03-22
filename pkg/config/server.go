@@ -1,16 +1,18 @@
 package config
 
 import (
-	"github.com/chrisge4/MAD_demo_API_service/pkg/storage"
+	"log"
+
+	todo "github.com/chrisge4/MAD_demo_API_service/pkg/rpc/proto"
 )
 
 type ServerConfig struct {
-	db    storage.Database
-	debug bool
+	rpcClient todo.TodoClient
+	debug     bool
 }
 
-func New(db storage.Database) *ServerConfig {
-	return &ServerConfig{db: db}
+func New(rpcClient todo.TodoClient) *ServerConfig {
+	return &ServerConfig{rpcClient: rpcClient}
 }
 
 func (c *ServerConfig) IsDebug() bool {
@@ -19,4 +21,12 @@ func (c *ServerConfig) IsDebug() bool {
 
 func (c *ServerConfig) SetDebug(debug bool) {
 	c.debug = debug
+}
+
+func (c *ServerConfig) RpcClient() todo.TodoClient {
+	if c.rpcClient == nil {
+		log.Fatal("config: RPC Client not initialised")
+	}
+
+	return c.rpcClient
 }
