@@ -14,6 +14,7 @@ func main() {
 
 	gs := grpc.NewServer()
 	ts := &rpc.Server{}
+
 	pb.RegisterTodoServer(gs, ts)
 	//reflection.Register(gs)
 
@@ -21,6 +22,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+	log.Println("Starting server at port :8082")
 
 	if err := gs.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %v", err)

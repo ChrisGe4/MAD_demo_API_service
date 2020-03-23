@@ -13,7 +13,7 @@ import (
 	pb "github.com/chrisge4/MAD_demo_API_service/pkg/rpc/proto"
 )
 
-func GetTodoFn(cfg *config.ServerConfig) func(*gin.Context) {
+func ListTodosFn(cfg *config.ServerConfig) func(*gin.Context) {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
