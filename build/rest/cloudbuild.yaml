@@ -8,22 +8,23 @@ options:
     path: /go
 steps:
 - name: 'gcr.io/cloud-builders/go:debian'
-  args: ['build','-i','-o','api', 'cmd/api/main.go']
+  args: ['build','-i','-o','rest-server', 'cmd/rest/main.go']
   env: ['PROJECT_ROOT=mad_demo']
 - name: 'gcr.io/cloud-builders/docker'
   args:
   - build
   #  - --tag=gcr.io/$PROJECT_ID/backend:$SHORT_SHA
   #  - --tag=gcr.io/$PROJECT_ID/backend:$TAG_NAME
-  - --tag=gcr.io/$PROJECT_ID/api:staging
-  - --tag=gcr.io/$PROJECT_ID/api:latest
+  - --tag=gcr.io/$PROJECT_ID/rest-server:staging
+  - --tag=gcr.io/$PROJECT_ID/rest-server:latest
+  - --file=build/rest/Dockerfile
   - .
 - name: "gcr.io/cloud-builders/docker"
-  args: ["push", "gcr.io/$PROJECT_ID/api:staging"]
+  args: ["push", "gcr.io/$PROJECT_ID/rest-server:staging"]
 
 images:
 #  - 'gcr.io/$PROJECT_ID/backend:$SHORT_SHA'
 #  - 'gcr.io/$PROJECT_ID/backend:$TAG_NAME'
-- 'gcr.io/$PROJECT_ID/api:latest'
+- 'gcr.io/$PROJECT_ID/rest-server:latest'
 timeout: 300s
-tags: ['api']
+tags: ['rest-server']

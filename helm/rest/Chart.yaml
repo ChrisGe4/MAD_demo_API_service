@@ -1,5 +1,5 @@
 apiVersion: v2
-name: api
+name: rest-server
 description: A Helm chart for MAD demo API server
 
 # A chart can be either an 'application' or a 'library' chart.
@@ -18,4 +18,4 @@ version: 0.0.1
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
-appVersion: 0.0.1
+appVersion: 0.0.2

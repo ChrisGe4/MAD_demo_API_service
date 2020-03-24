@@ -1,0 +1,27 @@
+options:
+  substitution_option: 'ALLOW_LOOSE'
+  volumes:
+  - name: go-modules
+    path: /go
+steps:
+- name: 'gcr.io/cloud-builders/go:debian'
+  args: ['build','-i','-o','grpc-server', 'cmd/grpc/main.go']
+  env: ['PROJECT_ROOT=mad_demo']
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - build
+  #  - --tag=gcr.io/$PROJECT_ID/backend:$SHORT_SHA
+  #  - --tag=gcr.io/$PROJECT_ID/backend:$TAG_NAME
+  - --tag=gcr.io/$PROJECT_ID/grpc-server:staging
+  - --tag=gcr.io/$PROJECT_ID/grpc-server:latest
+  - --file=build/grpc/Dockerfile
+  - .
+- name: "gcr.io/cloud-builders/docker"
+  args: ["push", "gcr.io/$PROJECT_ID/grpc-server:staging"]
+
+images:
+#  - 'gcr.io/$PROJECT_ID/backend:$SHORT_SHA'
+#  - 'gcr.io/$PROJECT_ID/backend:$TAG_NAME'
+- 'gcr.io/$PROJECT_ID/grpc-server:latest'
+timeout: 300s
+tags: ['grpc-server']

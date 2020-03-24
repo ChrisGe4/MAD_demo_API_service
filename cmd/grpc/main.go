@@ -18,11 +18,11 @@ func main() {
 	pb.RegisterTodoServer(gs, ts)
 	//reflection.Register(gs)
 
-	listener, err := net.Listen("tcp", ":8082")
+	listener, err := net.Listen("tcp", ":8090")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	log.Println("Starting server at port :8082")
+	log.Println("Starting server at port :8090")
 
 	if err := gs.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %v", err)

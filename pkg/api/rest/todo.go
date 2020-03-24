@@ -27,6 +27,7 @@ func ListTodosFn(cfg *config.ServerConfig) func(*gin.Context) {
 		category := &pb.Category{
 			Name: name,
 		}
+
 		stream, err := cfg.RpcClient().ListTodos(ctx, category)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -34,7 +35,6 @@ func ListTodosFn(cfg *config.ServerConfig) func(*gin.Context) {
 		}
 		var result []*pb.TodoItem
 		for {
-
 			t, err := stream.Recv()
 			if err == io.EOF {
 				break

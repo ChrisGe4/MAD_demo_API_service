@@ -1,0 +1,14 @@
+replicaCount: 1
+env: dev
+
+image:
+  repository: gcr.io/gcore-dev01/grpc-server
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8090
+  targetPort: 8090
+
+resources: {}
+

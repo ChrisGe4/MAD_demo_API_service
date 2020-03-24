@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-api
+  name: grpc-server
   labels:
-    app.kubernetes.io/name: backend-api
+    app.kubernetes.io/name: grpc-server
     app.kubernetes.io/managed-by: helm
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: backend
@@ -11,31 +11,31 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      service: api
+      service: grpc-server
       env: {{ .Values.env }}
       component: backend
   template:
     metadata:
       labels:
-        service: api
+        service: grpc-server
         env: {{ .Values.env }}
         component: backend
     spec:
       containers:
-        - name: api
+        - name: grpc-server
           image: "{{ .Values.image.repository }}:latest"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: http
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
