@@ -22,7 +22,7 @@ func NewServer(db storage.Database) *Server {
 	return &Server{db: db}
 }
 func (s *Server) List(c *pb.Category, stream pb.Todo_ListServer) error {
-	grpclog.Info(fmt.Sprintf("List todos in category %v", c.Name))
+	grpclog.Infof("List todos in category %v", c.Name)
 	tasks, err := s.db.List(context.Background(), c)
 	if err != nil {
 		return err
@@ -36,7 +36,7 @@ func (s *Server) List(c *pb.Category, stream pb.Todo_ListServer) error {
 }
 
 func (s *Server) Add(ctx context.Context, t *pb.Task) (*pb.Task, error) {
-	grpclog.Info("Adding a new todo")
+	grpclog.Infof("Adding a new todo %v", t)
 	t.Id = uuid.New().String()
 	if err := s.db.Add(ctx, t); err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
