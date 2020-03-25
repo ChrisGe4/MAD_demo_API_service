@@ -40,11 +40,8 @@ func ListFn(cfg *config.ServerConfig) func(*gin.Context) {
 			}
 			result = append(result, t)
 		}
-
 		c.JSON(http.StatusOK, result)
-
 	}
-
 }
 
 func AddFn(cfg *config.ServerConfig) func(*gin.Context) {
