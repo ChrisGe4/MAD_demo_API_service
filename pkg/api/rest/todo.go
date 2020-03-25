@@ -21,7 +21,6 @@ func ListFn(cfg *config.ServerConfig) func(*gin.Context) {
 		category := &pb.Category{
 			Name: name,
 		}
-
 		stream, err := cfg.RpcClient().List(ctx, category)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
