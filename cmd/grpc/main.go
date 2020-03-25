@@ -1,20 +1,42 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net"
+	"os"
 
 	"google.golang.org/grpc"
 
+	"github.com/chrisge4/MAD_demo_API_service/pkg/pb"
 	"github.com/chrisge4/MAD_demo_API_service/pkg/rpc"
-	pb "github.com/chrisge4/MAD_demo_API_service/pkg/rpc/proto"
+	"github.com/chrisge4/MAD_demo_API_service/pkg/storage"
+)
+
+const (
+	defGcpProject = "cloud-build-delivery-mad"
+	defCollection = "todo"
+	GcpProjectEnv = "GCP_PROJECT_ID"
+	CollectionEnv = "FIRESTORE_COLLECTION"
 )
 
 func main() {
 
+	project := os.Getenv(GcpProjectEnv)
+	collection := os.Getenv(CollectionEnv)
+	if project == "" {
+		project = defGcpProject
+	}
+	if collection == "" {
+		collection = defCollection
+	}
 	gs := grpc.NewServer()
-	ts := &rpc.Server{}
-
+	db, err := storage.NewFirestore(context.Background(), "", project, collection)
+	defer db.Close()
+	if err != nil {
+		log.Fatalf("failed to connect to firestore: %v", err)
+	}
+	ts := rpc.NewServer(db)
 	pb.RegisterTodoServer(gs, ts)
 	//reflection.Register(gs)
 

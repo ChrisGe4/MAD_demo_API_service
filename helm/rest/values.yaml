@@ -2,8 +2,8 @@ replicaCount: 1
 env: dev
 
 image:
-  repository: gcr.io/gcore-dev01/rest-server
-  pullPolicy: IfNotPresent
+  repository: gcr.io/cloud-build-delivery-mad/rest-server
+  pullPolicy: Always
 
 service:
   type: LoadBalancer

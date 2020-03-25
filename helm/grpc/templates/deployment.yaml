@@ -25,6 +25,11 @@ spec:
         - name: grpc-server
           image: "{{ .Values.image.repository }}:latest"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: GCP_PROJECT_ID
+              value: {{ .Values.envVar.gcpProjectId }}
+            - name: FIRESTORE_COLLECTION
+              value: {{ .Values.envVar.firestoreCollection }}
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}

@@ -1,48 +1,49 @@
 package rpc
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 
-	pb "github.com/chrisge4/MAD_demo_API_service/pkg/rpc/proto"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
+	"google.golang.org/grpc/status"
+
+	"github.com/google/uuid"
+
+	"github.com/chrisge4/MAD_demo_API_service/pkg/pb"
+	"github.com/chrisge4/MAD_demo_API_service/pkg/storage"
 )
 
-var mockData = []byte(`[{
-    "description": "Attend meeting",
-	"category": {
-        "name": "work"
-    },
-	"id": 1
-}, {
-	"description": "Write code",
-    "category": {
-        "name": "work"
-    },
-	"id": 2
-}]`)
-
 type Server struct {
+	db storage.Database
 }
 
-func (s *Server) ListTodos(c *pb.Category, stream pb.Todo_ListTodosServer) error {
-
-	grpclog.Info(fmt.Sprintf("get todos in category %v", c.Name))
-
-	var todos []*pb.TodoItem
-	err := json.Unmarshal(mockData, &todos)
+func NewServer(db storage.Database) *Server {
+	return &Server{db: db}
+}
+func (s *Server) List(c *pb.Category, stream pb.Todo_ListServer) error {
+	grpclog.Info(fmt.Sprintf("List todos in category %v", c.Name))
+	tasks, err := s.db.List(context.Background(), c)
 	if err != nil {
 		return err
 	}
-
-	for _, t := range todos {
-		if t.Category.Name == c.Name {
-
-			if err := stream.Send(t); err != nil {
-				return err
-			}
+	for _, t := range tasks {
+		if err := stream.Send(t); err != nil {
+			return err
 		}
 	}
-
 	return nil
+}
+
+func (s *Server) Add(ctx context.Context, t *pb.Task) (*pb.Task, error) {
+	grpclog.Info("Adding a new todo")
+	t.Id = uuid.New().String()
+	if err := s.db.Add(ctx, t); err != nil {
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+	return t, nil
+}
+
+func (s *Server) Close() error {
+	return s.db.Close()
 }

@@ -2,8 +2,8 @@ replicaCount: 1
 env: dev
 
 image:
-  repository: gcr.io/gcore-dev01/grpc-server
-  pullPolicy: IfNotPresent
+  repository: gcr.io/cloud-build-delivery-mad/grpc-server
+  pullPolicy: Always
 
 service:
   type: ClusterIP
@@ -12,3 +12,7 @@ service:
 
 resources: {}
 
+
+envVar:
+  gcpProjectId: cloud-build-delivery-mad
+  firestoreCollection: todo

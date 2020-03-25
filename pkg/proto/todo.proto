@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package todo;
+
+option go_package ="pb";
+
+service Todo {
+  // A simple RPC for retrieving to-do items
+
+  rpc List(Category) returns (stream Task) {}
+  rpc Add(Task) returns (Task) {}
+}
+
+message Category {
+  string name = 1;
+}
+
+message Task {
+  string description = 1;
+  Category category = 2;
+  string id = 3;
+  bool done = 4;
+}
+

@@ -3,15 +3,15 @@ package config
 import (
 	"log"
 
-	todo "github.com/chrisge4/MAD_demo_API_service/pkg/rpc/proto"
+	"github.com/chrisge4/MAD_demo_API_service/pkg/pb"
 )
 
 type ServerConfig struct {
-	rpcClient todo.TodoClient
+	rpcClient pb.TodoClient
 	debug     bool
 }
 
-func New(rpcClient todo.TodoClient) *ServerConfig {
+func New(rpcClient pb.TodoClient) *ServerConfig {
 	return &ServerConfig{rpcClient: rpcClient}
 }
 
@@ -23,7 +23,7 @@ func (c *ServerConfig) SetDebug(debug bool) {
 	c.debug = debug
 }
 
-func (c *ServerConfig) RpcClient() todo.TodoClient {
+func (c *ServerConfig) RpcClient() pb.TodoClient {
 	if c.rpcClient == nil {
 		log.Fatal("config: RPC Client not initialised")
 	}
