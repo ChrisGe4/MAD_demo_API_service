@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-server
+  labels:
+    app.kubernetes.io/name: http-server
+    app.kubernetes.io/managed-by: helm
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      service: rest
+      env: {{ .Values.env }}
+      component: backend
+  template:
+    metadata:
+      labels:
+        service: rest
+        env: {{ .Values.env }}
+        component: backend
+    spec:
+      containers:
+        - name: rest
+          image: "{{ .Values.image.repository }}:latest"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: GRPC_SERVER_HOST
+              value: {{ .Values.envVar.grpcServerHost }}
+            - name: GRPC_SERVER_PORT
+              value: "{{ .Values.envVar.grpcServerPort }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: http
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

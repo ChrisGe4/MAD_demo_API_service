@@ -1,0 +1,6 @@
+FROM gcr.io/distroless/base
+COPY http-server /http-server
+
+EXPOSE 8081
+
+ENTRYPOINT ["/http-server"]
