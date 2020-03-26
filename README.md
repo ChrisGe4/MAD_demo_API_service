@@ -7,16 +7,20 @@ This service is being used for preliminary research for Managed Application Deli
   * Helm Chart
   * Rest API    
   * gRPC
+  * Firestore
+  * Skaffold
 
-**In progress**
-  * redis
-  * helm for gRPC server 
-  * skaffold
+**Build+depoly GRPC service**
+ 
+  ***Option 1***
+  * cd grpc-server
+  * gcloud builds submit .
+  * helm install grpc-server helm/
+  ***Option 2***
+  * cd grpc-server
+  * skaffold run
 
-
-**Deploy GRPC service**
-  * cd build/grpc
-  * gcloud builds submit ../../
-  * helm install grpc-server --debug --dry-run helm/grpc
+    
+  
 
     
