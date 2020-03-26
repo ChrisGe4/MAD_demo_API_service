@@ -1,4 +1,4 @@
-# MAD_demo_API_service - TODO app
+# MAD_demo - TODO app
 
 This service is being used for preliminary research for Managed Application Delivery. 
 
