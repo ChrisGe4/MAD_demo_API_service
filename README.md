@@ -1,4 +1,4 @@
-# MAD_demo - TODO app
+# TODO app
 
 This service is being used for preliminary research for Managed Application Delivery. 
 
@@ -18,7 +18,6 @@ This service is being used for preliminary research for Managed Application Deli
   * helm install grpc-server helm/
   
   ***Option 2***
-  * cd grpc-server
   * skaffold run
 
     
