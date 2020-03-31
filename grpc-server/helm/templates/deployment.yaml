@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: grpc-server
-          image: "{{ .Values.image.repository }}:latest"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: GCP_PROJECT_ID

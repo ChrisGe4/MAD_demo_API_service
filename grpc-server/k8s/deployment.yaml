@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-server
+  labels:
+    app.kubernetes.io/name: grpc-server
+    app.kubernetes.io/managed-by: helm
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: grpc-server
+      env: dev
+      component: backend
+  template:
+    metadata:
+      labels:
+        service: grpc-server
+        env: dev
+        component: backend
+    spec:
+      containers:
+        - name: grpc-server
+          image: "gcr.io/cloud-build-delivery-mad/grpc-server:dev"
+          imagePullPolicy: Always
+          env:
+            - name: GCP_PROJECT_ID
+              value: cloud-build-delivery-mad
+            - name: FIRESTORE_COLLECTION
+              value: todo
+          ports:
+            - name: http
+              containerPort: 8090
+              protocol: TCP
+          resources:
+            {}

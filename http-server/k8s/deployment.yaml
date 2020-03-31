@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-server
+  labels:
+    app.kubernetes.io/name: http-server
+    app.kubernetes.io/managed-by: helm
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: rest
+      env: dev
+      component: backend
+  template:
+    metadata:
+      labels:
+        service: rest
+        env: dev
+        component: backend
+    spec:
+      containers:
+        - name: rest
+          image: "gcr.io/cloud-build-delivery-mad/http-server:dev"
+          imagePullPolicy: Always
+          env:
+            - name: GRPC_SERVER_HOST
+              value: grpc-server
+            - name: GRPC_SERVER_PORT
+              value: "8090"
+          ports:
+            - name: http
+              containerPort: 8081
+              protocol: TCP
+          #          livenessProbe:
+          #            httpGet:
+          #              path: /
+          #              port: http
+          #          readinessProbe:
+          #            httpGet:
+          #              path: /
+          #              port: http
+          resources:
+            {}

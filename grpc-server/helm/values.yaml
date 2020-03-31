@@ -3,6 +3,7 @@ env: dev
 
 image:
   repository: gcr.io/cloud-build-delivery-mad/grpc-server
+  tag: latest
   pullPolicy: Always
 
 service:

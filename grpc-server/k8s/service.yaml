@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-server
+  labels:
+    service: grpc-server
+    env: dev
+    component: backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8090
+      targetPort: 8090
+      name: grpc
+  selector:
+    service: grpc-server
+    env: dev
+    component: backend

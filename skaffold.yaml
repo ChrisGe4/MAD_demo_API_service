@@ -10,28 +10,48 @@ build:
     - image: gcr.io/cloud-build-delivery-mad/http-server
       context: http-server
   googleCloudBuild:
-deploy:
-  helm:
-    releases:
-      - name: grpc-server
-        chartPath: grpc-server/helm
-        wait: true
-        valuesFiles:
-          - grpc-server/helm/values.yaml
-            #        values:
-            #          image: skaffold-helm
-          #recreatePods will pass --recreate-pods to helm upgrade
-        recreatePods: true
-          #overrides builds an override values.yaml file to run with the helm deploy
-          #overrides:
-          # some:
-          #   key: someValue
-          #setValues get appended to the helm deploy with --set.
-          #setValues:
-        #some.key: someValue
-      - name: http-server
-        chartPath: http-server/helm
-        wait: true
-        valuesFiles:
-          - http-server/helm/values.yaml
-        recreatePods: true
+
+profiles:
+  - name: k8s-deploy
+    deploy:
+      kubectl:
+        manifests:
+          - 'grpc-server/k8s/*.yaml'
+          - 'http-server/k8s/*.yaml'
+
+  - name: helm-deploy #not installed, doesn't work with cloud build
+    deploy:
+      helm:
+        releases:
+          - name: grpc-server-{{.ENV}}
+            chartPath: grpc-server/helm
+            wait: true
+            version: 1.0.1
+            valuesFiles:
+              - grpc-server/helm/values.yaml
+                #        values:
+              #          image: skaffold-helm
+              #recreatePods will pass --recreate-pods to helm upgrade
+            recreatePods: true
+              #overrides builds an override values.yaml file to run with the helm deploy
+              #overrides:
+              # some:
+              #   key: someValue
+            #setValues get appended to the helm deploy with --set.
+            setValues:
+              image.repository: gcr.io/cloud-build-delivery-mad/grpc-server
+            #        imageStrategy:
+            #          helm: {}
+            setValueTemplates:
+              image.tag: "{{.ENV}}"
+          - name: http-server-{{.ENV}}
+            chartPath: http-server/helm
+            version: 1.0.0
+            wait: true
+            valuesFiles:
+              - http-server/helm/values.yaml
+            recreatePods: true
+            setValues:
+              image.repository: gcr.io/cloud-build-delivery-mad/http-server
+            setValueTemplates:
+              image.tag: "{{.ENV}}"

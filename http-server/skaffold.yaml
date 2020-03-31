@@ -1,0 +1,14 @@
+apiVersion: skaffold/v2beta1
+kind: Config
+build:
+  tagPolicy:
+    envTemplate:
+      template: "{{.IMAGE_NAME}}:{{.ENV}}"
+  artifacts:
+    - image: gcr.io/cloud-build-delivery-mad/http-server
+      context: http-server
+  googleCloudBuild:
+deploy:
+  kubectl:
+    manifests:
+      - 'k8s/*.yaml'
