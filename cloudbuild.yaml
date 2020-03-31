@@ -1,0 +1,17 @@
+options:
+  substitution_option: 'ALLOW_LOOSE'
+  env:
+    - CLOUDSDK_COMPUTE_ZONE=us-east4-a
+    - CLOUDSDK_CONTAINER_CLUSTER=cbd-mad-demo
+    - ENV=${_ENV}
+#  volumes:
+#  - name: go-modules
+#    path: /go
+steps:
+  - name: gcr.io/$PROJECT_ID/skaffold:alpha
+    args: ['build', '-f=skaffold.yaml']
+#images:
+#  - 'gcr.io/$PROJECT_ID/grpc-server:$SHORT_SHA'
+#  - 'gcr.io/$PROJECT_ID/http-server:$SHORT_SHA'
+timeout: 300s
+tags: ['backend-server']

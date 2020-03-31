@@ -2,7 +2,8 @@ apiVersion: skaffold/v2beta1
 kind: Config
 build:
   tagPolicy:
-    sha256: {}
+    envTemplate:
+      template: "{{.IMAGE_NAME}}:{{.ENV}}"
   artifacts:
     - image: gcr.io/cloud-build-delivery-mad/grpc-server
       context: grpc-server
