@@ -6,9 +6,8 @@ build:
       template: "{{.IMAGE_NAME}}:{{.ENV}}"
   artifacts:
     - image: gcr.io/cloud-build-delivery-mad/http-server
-      context: http-server
   googleCloudBuild:
 deploy:
   kubectl:
     manifests:
-      - 'http-server/k8s/*.yaml'
+      - 'k8s/*.yaml'

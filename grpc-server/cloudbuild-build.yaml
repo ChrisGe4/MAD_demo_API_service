@@ -1,0 +1,11 @@
+options:
+  substitution_option: 'ALLOW_LOOSE'
+  env:
+    - CLOUDSDK_COMPUTE_ZONE=us-east4-a
+    - CLOUDSDK_CONTAINER_CLUSTER=cbd-mad-demo
+    - ENV=${_ENV}
+steps:
+  - name: gcr.io/$PROJECT_ID/skaffold:alpha
+    args: ['build', '-f=skaffold.yaml']
+timeout: 300s
+tags: ['grpc-server']

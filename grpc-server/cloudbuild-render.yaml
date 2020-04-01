@@ -1,0 +1,16 @@
+options:
+  substitution_option: 'ALLOW_LOOSE'
+  env:
+    - CLOUDSDK_COMPUTE_ZONE=us-east4-a
+    - CLOUDSDK_CONTAINER_CLUSTER=cbd-mad-demo
+    - ENV=${_ENV}
+steps:
+  - id: 'render grpc'
+    name: gcr.io/$PROJECT_ID/skaffold:alpha
+    args: ['render', '-f=skaffold.yaml', '--output=k8s-grpc-server.yaml']
+    waitFor: ['-']
+  - name: gcr.io/cloud-builders/gsutil
+    args: ['cp','k8s-grpc-server.yaml','gs://mad-demo-k8s/']
+    waitFor: ['render grpc']
+timeout: 400s
+tags: ['backend-server']

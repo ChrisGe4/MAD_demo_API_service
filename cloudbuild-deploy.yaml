@@ -4,9 +4,9 @@ options:
     - CLOUDSDK_COMPUTE_ZONE=us-east4-a
     - CLOUDSDK_CONTAINER_CLUSTER=cbd-mad-demo
     - ENV=${_ENV}
-#  volumes:
-#    - name: k8s-module
-#      path: /k8s
+  volumes:
+    - name: k8s-module
+      path: /k8s
 steps:
   #  - name: gcr.io/$PROJECT_ID/skaffold:alpha
   #    args: ['build', '-f=grpc-server/skaffold.yaml']
