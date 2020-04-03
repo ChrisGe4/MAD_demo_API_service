@@ -8,4 +8,4 @@ steps:
   - name: gcr.io/$PROJECT_ID/skaffold:alpha
     args: ['build', '-f=skaffold.yaml']
 timeout: 300s
-tags: ['http-server']
+tags: ['http-server-build']

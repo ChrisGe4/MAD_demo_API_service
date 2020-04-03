@@ -13,4 +13,4 @@ steps:
     args: ['cp','k8s-http-server.yaml','gs://mad-demo-k8s/']
     waitFor: ['render http']
 timeout: 100s
-tags: ['http-server']
+tags: ['http-server-render']
