@@ -49,14 +49,15 @@ func TriggerJob(ctx context.Context, m PubSubMessage) error {
 			repo = "mad-demo-config"
 		case HttpBuildTag:
 			log.Println("http render job in queue ")
-			triggerId = "83babdf5-6538-47b3-b210-d2389c275907"
-			repo = "mad-demo-grpc-service"
+			triggerId = "1b9409fa-b90e-4c89-933a-111a4a319769"
+			repo = "mad-demo-http-service"
 		case HttpRenderTag:
 			log.Println("deploy in queue ")
-			triggerId = "83babdf5-6538-47b3-b210-d2389c275907"
-			repo = "mad-demo-grpc-service"
+			triggerId = "0c9895dc-fa3b-4679-9c26-c770c9bb0924"
+			repo = "mad-demo-config"
 		case ServiceDeployTag:
 			log.Println("deploy completed")
+			return nil
 		default:
 			log.Println("nothing to enqueue ")
 			return nil
@@ -65,17 +66,17 @@ func TriggerJob(ctx context.Context, m PubSubMessage) error {
 	} else {
 		switch tag {
 		case GrpcBuildTag:
-			log.Printf("grpc build job %v \n ", j.Status)
+			log.Printf("grpc build job %v ", j.Status)
 		case GrpcRenderTag:
-			log.Printf("grpc render job %v \n", j.Status)
+			log.Printf("grpc render job %v", j.Status)
 		case HttpBuildTag:
-			log.Printf("http build job  %v \n", j.Status)
+			log.Printf("http build job  %v", j.Status)
 		case HttpRenderTag:
-			log.Printf("http render job %v \n ", j.Status)
+			log.Printf("http render job %v", j.Status)
 		case ServiceDeployTag:
-			log.Printf("deploy job %v \n ", j.Status)
+			log.Printf("deploy job %v", j.Status)
 		default:
-			log.Printf("unknown job, tag: %q \n", tag)
+			log.Printf("unknown job, tag: %q", tag)
 		}
 		return nil
 	}
